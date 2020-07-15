@@ -1,13 +1,35 @@
 import { Button, TextField } from "@material-ui/core";
 import React from "react";
+import style from "./authForm.module.scss";
 
 export default function (props) {
   //renders register or login depending which is needed
-  const { handleOnChange, handleLogin, handleRegister } = props;
-  const handleAuth = handleLogin || handleRegister
-  const actionText = handleLogin ? 'Login' : 'Register'
+  const {
+    handleOnChange,
+    handleLogin,
+    handleRegister,
+    setModalVisibility,
+  } = props;
+  const handleAuth = handleLogin || handleRegister;
+  const actionText = handleLogin ? "Login" : "Register";
+  const switchText = handleLogin ? "Register" : "Login";
+  //if register, swap to login modal, and vice versa
+  const toggleBetweenRegisterLogin = () => {
+    setModalVisibility((prev) =>
+      Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, !v]))
+    );
+  };
   return (
-    <>
+    <div className={style.modal}>
+      {/* allow user to input new name when registering  */}
+      {handleRegister && (
+        <TextField
+          label="Username"
+          variant="filled"
+          name="name"
+          onChange={handleOnChange}
+        />
+      )}
       <TextField
         label="Phone Number"
         variant="filled"
@@ -31,6 +53,9 @@ export default function (props) {
       >
         {actionText}
       </Button>
-    </>
+      <Button
+        onClick={toggleBetweenRegisterLogin}
+      >{`I want to ${switchText}`}</Button>
+    </div>
   );
 }
