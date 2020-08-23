@@ -11,8 +11,8 @@ export default function (props) {
     setModalVisibility,
   } = props;
   const handleAuth = handleLogin || handleRegister;
-  const actionText = handleLogin ? "Login" : "Register";
-  const switchText = handleLogin ? "Register" : "Login";
+  const actionText = handleLogin ? "Login" : "Sign Up";
+  const switchText = handleLogin ? "Sign Up" : "Login";
   //if register, swap to login modal, and vice versa
   const toggleBetweenRegisterLogin = () => {
     setModalVisibility((prev) =>

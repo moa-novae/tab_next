@@ -1,0 +1,67 @@
+.hero {
+  height: 100vh;
+  background: linear-gradient(rgba(23, 24, 32, 0.6), rgba(23, 24, 32, 0.6)),
+    url("/landing.jpg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10vh 0;
+
+    h1 {
+      width: 80%;
+      text-align: center;
+      margin: 0;
+      color: #fafafa;
+      margin: 1em;
+    }
+    .notebook {
+      width: 10em;
+      border-radius: 50%;
+      background-color: #fafafa;
+      background-image: url("/facets.png");
+      background-size: cover;
+    }
+  }
+  .btnContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    button {
+      width: 100%;
+      margin: 0.5em;
+    }
+  }
+}
+.info {
+  width: 100%;
+  .infoCard {
+    height: 15em;
+    width: 100%;
+    padding: 4em 1em;
+    box-sizing: border-box;
+    background-image: url("/facets.png");
+    color: #fafafa;
+    text-align: center;
+    &.bgTeal {
+      background-color: #1cc29f;
+    }
+    &.bgCharcoal {
+      background-color: #373b3f;
+    }
+    &.bgOrange {
+      background-color: #f67240;
+    }
+    &.bgPurple {
+      background-color: #8656cd;
+    }
+    button {
+      color: #fafafa;
+    }
+  }
+}
