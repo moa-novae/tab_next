@@ -1,3 +1,4 @@
+import { logIn, logout, register } from "../services/authServices";
 import { useState, useContext, useEffect } from "react";
 import { userStore } from "../hooks/userStore";
 import axios from "axios";
@@ -38,18 +39,13 @@ export default function () {
   const handleLogin = async function () {
     //get jwt token and store in cookie
     try {
-      const res = await axios.post(`${apiEndpoint}/api/login`, {
-        user: {
-          phone: form.phone,
-          password: form.password,
-        },
-      });
+      const res = await logIn(form.phone, form.password);
       cookies.set("jwtToken", res.headers.authorization);
       setToken(res.headers.authorization);
       setAuthStatus("loggedIn");
       setModalVisibility({ register: false, login: false });
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         //set auth form error
         setFormError((prev) => ({
           ...prev,
@@ -58,16 +54,14 @@ export default function () {
         // delete local token in cookie if any
         cookies.remove("jwtToken", { path: "/" });
         setAuthStatus("home");
+      } else {
+        console.log(err);
       }
     }
   };
   const handleLogout = async function () {
     try {
-      await axios.delete(`${apiEndpoint}/api/logout`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await logout(token);
       setToken(null);
       cookies.remove("jwtToken", { path: "/" });
       setAuthStatus("home");
@@ -78,13 +72,7 @@ export default function () {
   };
   const handleRegister = async function () {
     try {
-      await axios.post(`${apiEndpoint}/api/signup`, {
-        user: {
-          name: form.name,
-          phone: form.phone,
-          password: form.password,
-        },
-      });
+      const res = await register(form.name, form.phone, form.password);
       handleLogin();
     } catch (err) {
       console.log(err);

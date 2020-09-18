@@ -21,9 +21,7 @@ export default function (props) {
       Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, !v]))
     );
   };
-  useEffect(()=> {
-    console.log("auth", formError.password)
-  })
+
   return (
     <div className={style.modal}>
       {/* allow user to input new name when registering  */}

@@ -46,9 +46,7 @@ export default function Home() {
       ),
     },
   ];
-  useEffect(()=> {
-    console.log(formError)
-  }, [formError])
+
   const infoCards = infoCardsContent.map((cardContent) => (
     <Grid item xs={12} md={6} key={cardContent.title}>
       <div
