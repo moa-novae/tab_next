@@ -1,15 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
+import { userStore } from "../hooks/userStore";
 import axios from "axios";
 import { Cookies } from "react-cookie";
 const cookies = new Cookies();
 export default function () {
+  const userState = useContext(userStore);
   const [form, setForm] = useState({ name: "", phone: "", password: "" });
+  const [formError, setFormError] = useState({
+    name: "",
+    phone: "",
+    password: "",
+  });
   const [token, setToken] = useState(cookies.get("jwtToken") || null);
   const [authStatus, setAuthStatus] = useState(token ? "loggedIn" : "home");
   const [modalVisibility, setModalVisibility] = useState({
     register: false,
     login: false,
   });
+
+  // if token exists already in cookies, check if token valid
+  useEffect(() => {
+    if (token) {
+      handleLogin();
+    }
+  }, []);
   const apiEndpoint = process.env.backendURL || "https://production";
 
   const handleOnChange = function (e) {
@@ -35,7 +49,16 @@ export default function () {
       setAuthStatus("loggedIn");
       setModalVisibility({ register: false, login: false });
     } catch (err) {
-      console.log(err);
+      if (err.response.status === 401) {
+        //set auth form error
+        setFormError((prev) => ({
+          ...prev,
+          password: "User or password incorrect",
+        }));
+        // delete local token in cookie if any
+        cookies.remove("jwtToken", { path: "/" });
+        setAuthStatus("home");
+      }
     }
   };
   const handleLogout = async function () {
@@ -69,6 +92,7 @@ export default function () {
   };
   return {
     form,
+    formError,
     handleOnChange,
     handleLogin,
     handleLogout,

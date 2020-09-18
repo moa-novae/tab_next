@@ -1,5 +1,5 @@
 import "./_app.scss";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider, CssBaseline } from "@material-ui/core";
 function MyApp({ Component, pageProps }) {
   const theme = createMuiTheme({
     palette: {
@@ -8,6 +8,8 @@ function MyApp({ Component, pageProps }) {
   });
   return (
     <ThemeProvider theme={theme}>
+      {/* reset css */}
+      <CssBaseline />
       <Component {...pageProps} />
     </ThemeProvider>
   );

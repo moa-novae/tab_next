@@ -1,13 +1,15 @@
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames";
 import { Button, Modal, Grid } from "@material-ui/core";
 import useAuth from "../hooks/useAuth";
-import AuthForm from "../components/authForm";
+import AuthForm from "../components/AuthForm/AuthForm";
 import styles from "./index.module.scss";
 
 export default function Home() {
   const {
+    form,
+    formError,
     handleOnChange,
     handleLogin,
     handleLogout,
@@ -44,8 +46,11 @@ export default function Home() {
       ),
     },
   ];
+  useEffect(()=> {
+    console.log(formError)
+  }, [formError])
   const infoCards = infoCardsContent.map((cardContent) => (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={12} md={6} key={cardContent.title}>
       <div
         className={classNames(styles.infoCard, styles[cardContent.bgColour])}
       >
@@ -59,10 +64,6 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-        />
       </Head>
       <div className={styles.hero}>
         <div className={styles.intro}>
@@ -111,11 +112,15 @@ export default function Home() {
           setModalVisibility({ register: false, login: false });
         }}
       >
-        <AuthForm
-          handleOnChange={handleOnChange}
-          handleLogin={handleLogin}
-          setModalVisibility={setModalVisibility}
-        />
+        <div>
+          <AuthForm
+            handleOnChange={handleOnChange}
+            handleLogin={handleLogin}
+            setModalVisibility={setModalVisibility}
+            form={form}
+            formError={formError}
+          />
+        </div>
       </Modal>
       {/* Register modal */}
       <Modal
@@ -124,11 +129,15 @@ export default function Home() {
           setModalVisibility({ register: false, login: false });
         }}
       >
-        <AuthForm
-          handleOnChange={handleOnChange}
-          handleRegister={handleRegister}
-          setModalVisibility={setModalVisibility}
-        />
+        <div>
+          <AuthForm
+            handleOnChange={handleOnChange}
+            handleRegister={handleRegister}
+            setModalVisibility={setModalVisibility}
+            form={form}
+            formError={formError}
+          />
+        </div>
       </Modal>
     </div>
   );

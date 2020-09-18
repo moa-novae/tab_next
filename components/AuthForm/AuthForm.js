@@ -1,10 +1,12 @@
 import { Button, TextField } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import style from "./authForm.module.scss";
 
 export default function (props) {
   //renders register or login depending which is needed
   const {
+    form,
+    formError,
     handleOnChange,
     handleLogin,
     handleRegister,
@@ -19,6 +21,9 @@ export default function (props) {
       Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, !v]))
     );
   };
+  useEffect(()=> {
+    console.log("auth", formError.password)
+  })
   return (
     <div className={style.modal}>
       {/* allow user to input new name when registering  */}
@@ -28,6 +33,8 @@ export default function (props) {
           variant="filled"
           name="name"
           onChange={handleOnChange}
+          value={form.name}
+          error={formError.name ? true : false}
         />
       )}
       <TextField
@@ -35,6 +42,8 @@ export default function (props) {
         variant="filled"
         name="phone"
         onChange={handleOnChange}
+        value={form.phone}
+        error={formError.phone ? true : false}
       />
       <TextField
         label="Password"
@@ -43,6 +52,9 @@ export default function (props) {
         autoComplete="current-password"
         name="password"
         onChange={handleOnChange}
+        value={form.password}
+        error={formError.password ? true : false}
+        helperText={formError.password}
       />
       <Button
         variant="contained"
