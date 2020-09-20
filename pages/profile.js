@@ -4,6 +4,12 @@ import { StateProvider } from "../hooks/userStore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Menu } from "@material-ui/icons";
 import GroupDrawer from "../components/GroupDrawer/GroupDrawer";
+import UserProfile from "../components/UserProfile/UserProfile";
+import { getGroups } from "../services/userServices";
+import { Cookies } from "react-cookie";
+import GroupProfile from "../components/GroupProfile/GroupProfile";
+const cookies = new Cookies();
+
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,16 +42,24 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  contentInfo: {
+    display: "flex",
+    flexDirection: "column",
+  },
 }));
 export default function () {
+  const token = cookies.get("jwtToken");
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [groups, setGroups] = useState();
+  const [selectedDrawerItem, setSelectedDrawerItem] = useState("HOME");
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   useEffect(() => {
-    // axios.get()
+    getGroups(token).then((groups) => {
+      setGroups(groups);
+    });
   }, []);
 
   return (
@@ -66,8 +80,23 @@ export default function () {
           <GroupDrawer
             mobileOpen={mobileOpen}
             handleDrawerToggle={handleDrawerToggle}
+            groups={groups}
+            selectedDrawerItem={selectedDrawerItem}
+            setSelectedDrawerItem={setSelectedDrawerItem}
           />
         </nav>
+        <main className={classes.content}>
+          {/* spacing div */}
+          <div className={classes.toolbar} />
+          <div className={classes.contentInfo}>
+            {selectedDrawerItem === "HOME" && <UserProfile />}
+            {selectedDrawerItem !== "HOME" && (
+              <GroupProfile
+                group={groups?.find((g) => g.id === selectedDrawerItem)}
+              />
+            )}
+          </div>
+        </main>
       </div>
     </StateProvider>
   );

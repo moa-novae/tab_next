@@ -1,47 +1,35 @@
 import { logIn, logout, register } from "../services/authServices";
 import { useState, useContext, useEffect } from "react";
-import { userStore } from "../hooks/userStore";
-import axios from "axios";
+import { userStore } from "./userStore";
+import useForm from "./useForm";
 import { Cookies } from "react-cookie";
 const cookies = new Cookies();
 export default function () {
+  const token = cookies.get("jwtToken");
   const userState = useContext(userStore);
-  const [form, setForm] = useState({ name: "", phone: "", password: "" });
-  const [formError, setFormError] = useState({
+  const { form, setForm, formError, setFormError, handleOnChange } = useForm({
     name: "",
     phone: "",
     password: "",
   });
-  const [token, setToken] = useState(cookies.get("jwtToken") || null);
+  // If token exists, user is logged in
   const [authStatus, setAuthStatus] = useState(token ? "loggedIn" : "home");
   const [modalVisibility, setModalVisibility] = useState({
     register: false,
     login: false,
   });
 
-  // if token exists already in cookies, check if token valid
+  // if token exists already in cookies, check if token is valid
   useEffect(() => {
     if (token) {
       handleLogin();
     }
   }, []);
-  const apiEndpoint = process.env.backendURL || "https://production";
 
-  const handleOnChange = function (e) {
-    const key = e.target.name;
-    const value = e.target.value;
-    setForm((prev) => {
-      const newState = { ...prev };
-      newState[key] = value.trim();
-      return newState;
-    });
-  };
   const handleLogin = async function () {
     //get jwt token and store in cookie
     try {
-      const res = await logIn(form.phone, form.password);
-      cookies.set("jwtToken", res.headers.authorization);
-      setToken(res.headers.authorization);
+      await logIn(form.phone, form.password);
       setAuthStatus("loggedIn");
       setModalVisibility({ register: false, login: false });
     } catch (err) {
@@ -51,8 +39,6 @@ export default function () {
           ...prev,
           password: "User or password incorrect",
         }));
-        // delete local token in cookie if any
-        cookies.remove("jwtToken", { path: "/" });
         setAuthStatus("home");
       } else {
         console.log(err);
@@ -61,9 +47,8 @@ export default function () {
   };
   const handleLogout = async function () {
     try {
-      const res = await logout(token);
+      await logout(token);
       setToken(null);
-      cookies.remove("jwtToken", { path: "/" });
       setAuthStatus("home");
       setModalVisibility({ register: false, login: false });
     } catch (err) {
@@ -72,7 +57,7 @@ export default function () {
   };
   const handleRegister = async function () {
     try {
-      const res = await register(form.name, form.phone, form.password);
+      await register(form.name, form.phone, form.password);
       handleLogin();
     } catch (err) {
       console.log(err);

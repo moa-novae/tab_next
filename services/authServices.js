@@ -36,4 +36,21 @@ const register = async function (name, phone, password) {
   return await res;
 };
 
+const checkToken = async function (token) {
+  try {
+    await axios.get(`${apiEndpoint}/api/profile`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    // if token is valid
+    return true;
+  } catch (e) {
+    // if token is invalid
+    if (err.response?.status === 401) {
+      return false;
+    }
+  }
+};
+
 export { logIn, logout, register };

@@ -1,6 +1,9 @@
-import React from "react";
-import { List, ListItem, Drawer, Hidden, Divider } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { List, MenuItem, Drawer, Hidden, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { getGroups } from "../../services/userServices";
+import { Cookies } from "react-cookie";
+const cookies = new Cookies();
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -16,22 +19,40 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-export default function ({ mobileOpen, handleDrawerToggle }) {
+export default function ({
+  mobileOpen,
+  handleDrawerToggle,
+  groups,
+  setSelectedDrawerItem,
+  selectedDrawerItem,
+}) {
   const classes = useStyles();
+  // MenuItem selected attribute is purely aesthetic, a true value leads to grey highlight
+  const items = groups?.map((group) => (
+    <MenuItem
+      key={group.id}
+      onClick={() => setSelectedDrawerItem(group.id)}
+      selected={selectedDrawerItem === group.id}
+    >
+      {group.name}
+    </MenuItem>
+  ));
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        <ListItem>Home</ListItem>
+        <MenuItem
+          onClick={() => setSelectedDrawerItem("HOME")}
+          selected={selectedDrawerItem === "HOME"}
+        >
+          Home
+        </MenuItem>
       </List>
-      <Divider />
-      <List>
-        <ListItem>1</ListItem>
-        <ListItem>2</ListItem>
-      </List>
+      <List>{items}</List>
     </div>
   );
+
   return (
     <>
       <Hidden smUp implementation="css">

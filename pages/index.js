@@ -2,7 +2,7 @@ import Head from "next/head";
 import React, { useEffect } from "react";
 import classNames from "classnames";
 import { Button, Modal, Grid } from "@material-ui/core";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuthForm";
 import AuthForm from "../components/AuthForm/AuthForm";
 import styles from "./index.module.scss";
 

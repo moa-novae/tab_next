@@ -12,4 +12,5 @@ export default function (initialState) {
       return newState;
     });
   };
+  return { form, setForm, formError, setFormError, handleOnChange };
 }
